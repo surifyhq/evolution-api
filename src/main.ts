@@ -24,7 +24,9 @@ import axios from 'axios';
 import compression from 'compression';
 import cors from 'cors';
 import express, { json, NextFunction, Request, Response, urlencoded } from 'express';
+import { readFileSync } from 'fs';
 import { join } from 'path';
+import swaggerUi from 'swagger-ui-express';
 
 async function initWA() {
   await waMonitor.loadInstance();
@@ -69,6 +71,38 @@ async function bootstrap() {
   app.use(express.static(join(ROOT_DIR, 'public')));
 
   app.use('/store', express.static(join(ROOT_DIR, 'store')));
+
+  // Swagger API Documentation
+  if (!configService.get<HttpServer>('SERVER').DISABLE_DOCS) {
+    try {
+      const swaggerDocument = JSON.parse(readFileSync(join(ROOT_DIR, 'swagger.json'), 'utf8'));
+
+      // Update server URL in swagger document dynamically
+      const serverUrl = configService.get<HttpServer>('SERVER').URL;
+      if (serverUrl) {
+        swaggerDocument.servers = [
+          {
+            url: serverUrl,
+            description: 'Current Server',
+          },
+          ...swaggerDocument.servers,
+        ];
+      }
+
+      app.use(
+        '/docs',
+        swaggerUi.serve,
+        swaggerUi.setup(swaggerDocument, {
+          customCss: '.swagger-ui .topbar { display: none }',
+          customSiteTitle: 'Evolution API Documentation',
+          customfavIcon: 'https://evolution-api.com/favicon.ico',
+        }),
+      );
+      logger.info('API Documentation enabled at /docs');
+    } catch (error) {
+      logger.warn('Failed to load Swagger documentation: ' + error.message);
+    }
+  }
 
   app.use('/', router);
 

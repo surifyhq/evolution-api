@@ -1,0 +1,1320 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Evolution API",
+    "description": "Evolution API - REST API for WhatsApp Multi-Device communication. A powerful, production-ready WhatsApp API platform built with Node.js, TypeScript, and Express.js supporting multiple WhatsApp providers and extensive integrations.",
+    "version": "2.3.7",
+    "contact": {
+      "name": "Evolution API Support",
+      "email": "contato@evolution-api.com",
+      "url": "https://github.com/EvolutionAPI/evolution-api"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Development Server"
+    },
+    {
+      "url": "{serverUrl}",
+      "description": "Custom Server",
+      "variables": {
+        "serverUrl": {
+          "default": "http://localhost:8080",
+          "description": "Your Evolution API server URL"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "Instance",
+      "description": "WhatsApp instance management endpoints"
+    },
+    {
+      "name": "Message",
+      "description": "Send messages (text, media, location, etc.)"
+    },
+    {
+      "name": "Chat",
+      "description": "Chat operations and management"
+    },
+    {
+      "name": "Group",
+      "description": "WhatsApp group management"
+    },
+    {
+      "name": "Settings",
+      "description": "Instance settings configuration"
+    },
+    {
+      "name": "Business",
+      "description": "WhatsApp Business API endpoints"
+    },
+    {
+      "name": "Template",
+      "description": "Message template management"
+    },
+    {
+      "name": "Label",
+      "description": "Label management for chats"
+    },
+    {
+      "name": "Call",
+      "description": "Call management"
+    },
+    {
+      "name": "Proxy",
+      "description": "Proxy configuration"
+    },
+    {
+      "name": "Metrics",
+      "description": "Prometheus metrics endpoint"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "apikey",
+        "description": "API Key for authentication. Set in AUTHENTICATION_API_KEY environment variable."
+      }
+    },
+    "schemas": {
+      "Instance": {
+        "type": "object",
+        "required": ["instanceName"],
+        "properties": {
+          "instanceName": {
+            "type": "string",
+            "description": "Unique name for the WhatsApp instance",
+            "example": "my-whatsapp"
+          },
+          "instanceId": {
+            "type": "string",
+            "description": "Unique identifier for the instance"
+          },
+          "token": {
+            "type": "string",
+            "description": "Authentication token for the instance"
+          },
+          "qrcode": {
+            "type": "boolean",
+            "description": "Whether to generate QR code",
+            "default": true
+          },
+          "integration": {
+            "type": "string",
+            "description": "Integration type (WHATSAPP-BAILEYS, WHATSAPP-BUSINESS, etc.)",
+            "example": "WHATSAPP-BAILEYS"
+          },
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number"
+          },
+          "businessId": {
+            "type": "string",
+            "description": "WhatsApp Business ID"
+          },
+          "webhook": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Enable webhook notifications"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Webhook URL to receive events"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of events to receive"
+              },
+              "byEvents": {
+                "type": "boolean",
+                "description": "Send events to separate webhooks by event type"
+              },
+              "base64": {
+                "type": "boolean",
+                "description": "Encode media in base64"
+              }
+            }
+          }
+        }
+      },
+      "SendTextMessage": {
+        "type": "object",
+        "required": ["number", "text"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number with country code",
+            "example": "5511999999999"
+          },
+          "text": {
+            "type": "string",
+            "description": "Message text",
+            "example": "Hello, this is a test message!"
+          },
+          "delay": {
+            "type": "number",
+            "description": "Delay in milliseconds before sending"
+          },
+          "linkPreview": {
+            "type": "boolean",
+            "description": "Enable link preview"
+          },
+          "mentioned": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of numbers to mention"
+          },
+          "quoted": {
+            "type": "object",
+            "description": "Message to quote/reply",
+            "properties": {
+              "key": {
+                "type": "object",
+                "description": "Message key object"
+              },
+              "message": {
+                "type": "object",
+                "description": "Message object"
+              }
+            }
+          }
+        }
+      },
+      "SendMediaMessage": {
+        "type": "object",
+        "required": ["number", "mediatype", "media"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number with country code",
+            "example": "5511999999999"
+          },
+          "mediatype": {
+            "type": "string",
+            "enum": ["image", "video", "audio", "document"],
+            "description": "Type of media to send"
+          },
+          "media": {
+            "type": "string",
+            "description": "URL or base64 encoded media"
+          },
+          "caption": {
+            "type": "string",
+            "description": "Media caption"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "File name for documents"
+          },
+          "mimetype": {
+            "type": "string",
+            "description": "MIME type of the file"
+          },
+          "delay": {
+            "type": "number",
+            "description": "Delay in milliseconds before sending"
+          }
+        }
+      },
+      "SendLocationMessage": {
+        "type": "object",
+        "required": ["number", "latitude", "longitude"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number with country code",
+            "example": "5511999999999"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Location latitude",
+            "example": -23.550520
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Location longitude",
+            "example": -46.633308
+          },
+          "name": {
+            "type": "string",
+            "description": "Location name"
+          },
+          "address": {
+            "type": "string",
+            "description": "Location address"
+          }
+        }
+      },
+      "SendContactMessage": {
+        "type": "object",
+        "required": ["number", "contact"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number with country code",
+            "example": "5511999999999"
+          },
+          "contact": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["fullName", "wuid", "phoneNumber"],
+              "properties": {
+                "fullName": {
+                  "type": "string",
+                  "description": "Contact full name"
+                },
+                "wuid": {
+                  "type": "string",
+                  "description": "WhatsApp user ID"
+                },
+                "phoneNumber": {
+                  "type": "string",
+                  "description": "Contact phone number"
+                },
+                "organization": {
+                  "type": "string",
+                  "description": "Contact organization"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Contact email"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Contact website URL"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SendReactionMessage": {
+        "type": "object",
+        "required": ["key", "reaction"],
+        "properties": {
+          "key": {
+            "type": "object",
+            "description": "Message key to react to"
+          },
+          "reaction": {
+            "type": "string",
+            "description": "Emoji reaction",
+            "example": "👍"
+          }
+        }
+      },
+      "SendPollMessage": {
+        "type": "object",
+        "required": ["number", "name", "selectableCount", "values"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number with country code",
+            "example": "5511999999999"
+          },
+          "name": {
+            "type": "string",
+            "description": "Poll question"
+          },
+          "selectableCount": {
+            "type": "number",
+            "description": "Number of options user can select"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Poll options"
+          }
+        }
+      },
+      "SendListMessage": {
+        "type": "object",
+        "required": ["number", "title", "buttonText", "sections"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number with country code",
+            "example": "5511999999999"
+          },
+          "title": {
+            "type": "string",
+            "description": "List title"
+          },
+          "description": {
+            "type": "string",
+            "description": "List description"
+          },
+          "buttonText": {
+            "type": "string",
+            "description": "Button text"
+          },
+          "footerText": {
+            "type": "string",
+            "description": "Footer text"
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Section title"
+                },
+                "rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "description": "Row title"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Row description"
+                      },
+                      "rowId": {
+                        "type": "string",
+                        "description": "Row identifier"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SendButtonsMessage": {
+        "type": "object",
+        "required": ["number", "title", "buttons"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number with country code",
+            "example": "5511999999999"
+          },
+          "title": {
+            "type": "string",
+            "description": "Message title"
+          },
+          "description": {
+            "type": "string",
+            "description": "Message description"
+          },
+          "footer": {
+            "type": "string",
+            "description": "Message footer"
+          },
+          "thumbnailUrl": {
+            "type": "string",
+            "description": "Thumbnail image URL"
+          },
+          "buttons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["reply", "copy", "url", "call", "pix"],
+                  "description": "Button type"
+                },
+                "displayText": {
+                  "type": "string",
+                  "description": "Button display text"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Button identifier"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Button URL (for url type)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SetPresence": {
+        "type": "object",
+        "required": ["presence"],
+        "properties": {
+          "presence": {
+            "type": "string",
+            "enum": ["unavailable", "available", "composing", "recording", "paused"],
+            "description": "Presence status to set"
+          }
+        }
+      },
+      "ConnectionState": {
+        "type": "object",
+        "properties": {
+          "instance": {
+            "type": "object",
+            "properties": {
+              "instanceName": {
+                "type": "string",
+                "description": "Instance name"
+              },
+              "state": {
+                "type": "string",
+                "enum": ["open", "close", "connecting"],
+                "description": "Connection state"
+              }
+            }
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "number",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "description": "Success message"
+          },
+          "data": {
+            "type": "object",
+            "description": "Response data"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "number",
+            "example": 400
+          },
+          "error": {
+            "type": "string",
+            "description": "Error type"
+          },
+          "response": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error message"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["Instance"],
+        "summary": "API Health Check",
+        "description": "Check if Evolution API is running and get basic information",
+        "responses": {
+          "200": {
+            "description": "API is working",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Welcome to the Evolution API, it is working!"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "2.3.7"
+                    },
+                    "clientName": {
+                      "type": "string",
+                      "description": "Database client name"
+                    },
+                    "manager": {
+                      "type": "string",
+                      "description": "Manager URL (if enabled)"
+                    },
+                    "apiDocs": {
+                      "type": "string",
+                      "description": "API documentation URL"
+                    },
+                    "documentation": {
+                      "type": "string",
+                      "example": "https://doc.evolution-api.com"
+                    },
+                    "whatsappWebVersion": {
+                      "type": "string",
+                      "description": "Current WhatsApp Web version"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/create": {
+      "post": {
+        "tags": ["Instance"],
+        "summary": "Create WhatsApp Instance",
+        "description": "Create a new WhatsApp instance for connection",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Instance"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Instance created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/connect/{instanceName}": {
+      "get": {
+        "tags": ["Instance"],
+        "summary": "Connect to WhatsApp",
+        "description": "Connect instance to WhatsApp (generates QR code if needed)",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance to connect"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connection initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Instance not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/connectionState/{instanceName}": {
+      "get": {
+        "tags": ["Instance"],
+        "summary": "Get Connection State",
+        "description": "Get current connection state of the instance",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Connection state retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/fetchInstances": {
+      "get": {
+        "tags": ["Instance"],
+        "summary": "Fetch All Instances",
+        "description": "Get list of all instances",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of instances",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Instance"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/setPresence/{instanceName}": {
+      "post": {
+        "tags": ["Instance"],
+        "summary": "Set Presence",
+        "description": "Set presence status (typing, recording, etc.)",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPresence"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Presence set successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/restart/{instanceName}": {
+      "post": {
+        "tags": ["Instance"],
+        "summary": "Restart Instance",
+        "description": "Restart a WhatsApp instance",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Instance restarted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/logout/{instanceName}": {
+      "delete": {
+        "tags": ["Instance"],
+        "summary": "Logout Instance",
+        "description": "Logout from WhatsApp but keep instance data",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/instance/delete/{instanceName}": {
+      "delete": {
+        "tags": ["Instance"],
+        "summary": "Delete Instance",
+        "description": "Delete instance and all its data",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Instance deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendText/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Text Message",
+        "description": "Send a text message to a WhatsApp number",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendTextMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendMedia/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Media Message",
+        "description": "Send image, video, audio or document",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMediaMessage"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "description": "WhatsApp number with country code"
+                  },
+                  "mediatype": {
+                    "type": "string",
+                    "description": "Type of media (image, video, audio, document)"
+                  },
+                  "caption": {
+                    "type": "string",
+                    "description": "Media caption"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Media file to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Media sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendLocation/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Location",
+        "description": "Send location message",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendLocationMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Location sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendContact/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Contact",
+        "description": "Send contact card",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendContactMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contact sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendReaction/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Reaction",
+        "description": "React to a message with an emoji",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendReactionMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reaction sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendPoll/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Poll",
+        "description": "Send a poll message",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendPollMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Poll sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendList/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send List Message",
+        "description": "Send an interactive list message",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendListMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "List sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/sendButtons/{instanceName}": {
+      "post": {
+        "tags": ["Message"],
+        "summary": "Send Buttons Message",
+        "description": "Send message with interactive buttons",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendButtonsMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Buttons sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": ["Metrics"],
+        "summary": "Prometheus Metrics",
+        "description": "Get Prometheus metrics for monitoring (requires PROMETHEUS_METRICS=true)",
+        "responses": {
+          "200": {
+            "description": "Prometheus metrics in text format",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "# HELP evolution_instances_total Total number of instances\n# TYPE evolution_instances_total gauge\nevolution_instances_total 5"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - IP not allowed or metrics disabled"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { PrismaRepository } from '@api/repository/repository.service';
 import { WAMonitoringService } from '@api/services/monitor.service';
-import { Auth, configService, Cors, Log, Websocket } from '@config/env.config';
+import { Auth, configService, Cors, HttpServer, Log, Websocket } from '@config/env.config';
 import { Logger } from '@config/logger.config';
 import { Server } from 'http';
 import { Server as SocketIO } from 'socket.io';
@@ -27,7 +27,7 @@ export class WebsocketController extends EventController implements EventControl
       cors: { origin: this.cors },
       allowRequest: async (req, callback) => {
         try {
-          const url = new URL(req.url || '', 'http://localhost');
+          const url = new URL(req.url || '', configService.get<HttpServer>('SERVER').URL || 'http://localhost');
           const params = new URLSearchParams(url.search);
 
           const { remoteAddress } = req.socket;

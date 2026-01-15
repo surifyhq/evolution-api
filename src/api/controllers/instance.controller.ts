@@ -344,6 +344,7 @@ export class InstanceController {
   }
 
   public async restartInstance({ instanceName }: InstanceDto) {
+    this.logger.info(`Available instances: ${Object.keys(this.waMonitor.waInstances)}`);
     try {
       const instance = this.waMonitor.waInstances[instanceName];
       const state = instance?.connectionStatus?.state;
@@ -358,6 +359,7 @@ export class InstanceController {
       this.logger.info(`Restarting instance: ${instanceName}`);
 
       if (typeof instance.restart === 'function') {
+        this.logger.info(`Function restart found for instance: ${instanceName}`);
         await instance.restart();
         // Wait a bit for the reconnection to be established
         await new Promise((r) => setTimeout(r, 2000));
@@ -368,6 +370,7 @@ export class InstanceController {
           },
         };
       }
+      this.logger.info(`Fallback for Baileys (uses different mechanism) for instance: ${instanceName}`);
 
       // Fallback for Baileys (uses different mechanism)
       if (state === 'open' || state === 'connecting') {

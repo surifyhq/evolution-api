@@ -5,7 +5,8 @@
 [![Docker Image](https://img.shields.io/badge/Docker-image-blue)](https://hub.docker.com/r/evoapicloud/evolution-api)
 [![Whatsapp Group](https://img.shields.io/badge/Group-WhatsApp-%2322BC18)](https://evolution-api.com/whatsapp)
 [![Discord Community](https://img.shields.io/badge/Discord-Community-blue)](https://evolution-api.com/discord)
-[![Postman Collection](https://img.shields.io/badge/Postman-Collection-orange)](https://evolution-api.com/postman) 
+[![Postman Collection](https://img.shields.io/badge/Postman-Collection-orange)](https://evolution-api.com/postman)
+[![Swagger API](https://img.shields.io/badge/Swagger-API%20Docs-85EA2D?logo=swagger)](http://localhost:8080/docs)
 [![Documentation](https://img.shields.io/badge/Documentation-Official-green)](https://doc.evolution-api.com)
 [![Feature Requests](https://img.shields.io/badge/Feature-Requests-purple)](https://evolutionapi.canny.io/feature-requests)
 [![Roadmap](https://img.shields.io/badge/Roadmap-Community-blue)](https://evolutionapi.canny.io/feature-requests)
@@ -90,6 +91,25 @@ We value community input and feedback to continuously improve Evolution API:
 ### 🔒 Security
 - **[Security Policy](./SECURITY.md)**: Guidelines for reporting security vulnerabilities
 - **Security Contact**: contato@evolution-api.com
+
+## API Documentation
+
+Evolution API provides interactive API documentation through Swagger UI:
+
+### 📚 Swagger Documentation
+- **Local Access**: `http://localhost:8080/docs` (when running locally)
+- **Interactive Testing**: Test all API endpoints directly from your browser
+- **Complete Reference**: Detailed schemas, examples, and authentication guides
+- **Official Docs**: [doc.evolution-api.com](https://doc.evolution-api.com)
+- **Postman Collection**: [evolution-api.com/postman](https://evolution-api.com/postman)
+
+### Configuration
+```bash
+# Enable/Disable Swagger Documentation (default: enabled)
+SERVER_DISABLE_DOCS=false
+```
+
+For more details about using the Swagger documentation, see [SWAGGER.md](./SWAGGER.md).
 
 ## Telemetry Notice
 
