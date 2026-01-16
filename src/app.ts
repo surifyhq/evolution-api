@@ -32,9 +32,9 @@ async function initWA() {
   await waMonitor.loadInstance();
 }
 
+const app = express();
 async function bootstrap() {
   const logger = new Logger('SERVER');
-  const app = express();
 
   let providerFiles: ProviderFiles = null;
   if (configService.get<ProviderSession>('PROVIDER').ENABLED) {
@@ -201,3 +201,5 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+export default app;
