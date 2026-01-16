@@ -91,12 +91,6 @@
       "NODE_ENV": "production"
     }
   },
-  "functions": {
-    "dist/main.js": {
-      "memory": 3008,
-      "maxDuration": 300
-    }
-  },
   "regions": ["iad1"],
   "github": {
     "silent": true
