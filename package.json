@@ -2,7 +2,7 @@
   "name": "evolution-api",
   "version": "2.3.7",
   "description": "Rest api for communication with WhatsApp",
-  "main": "./src/main.ts",
+  "main": "./dist/main.js",
   "type": "commonjs",
   "scripts": {
     "build": "tsc --noEmit && tsup",
@@ -153,6 +153,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
     "prettier": "^3.4.2",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.20.5",
     "typescript": "^5.7.2"
