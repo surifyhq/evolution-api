@@ -1,6 +1,8 @@
 {
   "version": 2,
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "name": "evolution-api",
+  "buildCommand": "npm run build",
   "builds": [
     {
       "src": "dist/main.js",
@@ -9,90 +11,13 @@
   ],
   "routes": [
     {
-      "src": "/docs",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/docs/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/manager",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/manager/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/store/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/metrics",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/instance/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/message/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/chat/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/group/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/business/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/template/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/settings/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/proxy/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/label/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
-      "src": "/call/(.*)",
-      "dest": "/dist/main.js"
-    },
-    {
       "src": "/(.*)",
       "dest": "/dist/main.js"
     }
   ],
-  "env": {
-    "NODE_ENV": "production",
-    "SERVER_TYPE": "http",
-    "SERVER_PORT": "8080"
-  },
   "build": {
     "env": {
       "NODE_ENV": "production"
     }
-  },
-  "regions": ["iad1"],
-  "github": {
-    "silent": true
   }
 }
