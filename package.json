@@ -2,7 +2,7 @@
   "name": "evolution-api",
   "version": "2.3.7",
   "description": "Rest api for communication with WhatsApp",
-  "main": "./dist/main.mjs",
+  "main": "./dist/main.js",
   "type": "commonjs",
   "scripts": {
     "build": "tsc --noEmit && tsup",
