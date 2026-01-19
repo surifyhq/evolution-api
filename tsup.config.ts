@@ -12,7 +12,7 @@ export default defineConfig({
   minify: false,
   bundle: false,
   format: ['cjs'],
-  skipNodeModulesBundle: true,
+  skipNodeModulesBundle: false,
   treeshake: false,
   keepNames: true,
   shims: true,
