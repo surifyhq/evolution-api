@@ -531,6 +531,251 @@
             }
           }
         }
+      },
+      "MessageKey": {
+        "type": "object",
+        "required": ["id", "fromMe", "remoteJid"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Message ID"
+          },
+          "fromMe": {
+            "type": "boolean",
+            "description": "Whether message is from current user"
+          },
+          "remoteJid": {
+            "type": "string",
+            "description": "Chat JID"
+          }
+        }
+      },
+      "WhatsAppNumberCheck": {
+        "type": "object",
+        "required": ["numbers"],
+        "properties": {
+          "numbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of phone numbers to check",
+            "example": ["5511999999999", "5511888888888"]
+          }
+        }
+      },
+      "ReadMessage": {
+        "type": "object",
+        "required": ["readMessages"],
+        "properties": {
+          "readMessages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageKey"
+            },
+            "description": "Array of message keys to mark as read"
+          }
+        }
+      },
+      "ArchiveChat": {
+        "type": "object",
+        "required": ["archive"],
+        "properties": {
+          "chat": {
+            "type": "string",
+            "description": "Chat JID to archive"
+          },
+          "archive": {
+            "type": "boolean",
+            "description": "true to archive, false to unarchive"
+          },
+          "lastMessage": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "$ref": "#/components/schemas/MessageKey"
+              },
+              "messageTimestamp": {
+                "type": "integer",
+                "description": "Unix timestamp of last message"
+              }
+            }
+          }
+        }
+      },
+      "MarkChatUnread": {
+        "type": "object",
+        "required": ["lastMessage"],
+        "properties": {
+          "chat": {
+            "type": "string",
+            "description": "Chat JID"
+          },
+          "lastMessage": {
+            "type": "object",
+            "required": ["key"],
+            "properties": {
+              "key": {
+                "$ref": "#/components/schemas/MessageKey"
+              },
+              "messageTimestamp": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "DeleteMessage": {
+        "type": "object",
+        "required": ["id", "fromMe", "remoteJid"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Message ID"
+          },
+          "fromMe": {
+            "type": "boolean",
+            "description": "Whether message is from current user"
+          },
+          "remoteJid": {
+            "type": "string",
+            "description": "Chat JID"
+          },
+          "participant": {
+            "type": "string",
+            "description": "Participant JID (for group messages)"
+          }
+        }
+      },
+      "UpdateMessage": {
+        "type": "object",
+        "required": ["number", "key", "text"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number"
+          },
+          "key": {
+            "$ref": "#/components/schemas/MessageKey"
+          },
+          "text": {
+            "type": "string",
+            "description": "Updated message text"
+          }
+        }
+      },
+      "SendPresence": {
+        "type": "object",
+        "required": ["number", "presence", "delay"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number"
+          },
+          "presence": {
+            "type": "string",
+            "enum": ["unavailable", "available", "composing", "recording", "paused"],
+            "description": "Presence type"
+          },
+          "delay": {
+            "type": "number",
+            "description": "Duration in milliseconds"
+          }
+        }
+      },
+      "BlockUser": {
+        "type": "object",
+        "required": ["number", "status"],
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number to block/unblock"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["block", "unblock"],
+            "description": "Action to perform"
+          }
+        }
+      },
+      "ProfileName": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "New profile name",
+            "example": "John Doe"
+          }
+        }
+      },
+      "ProfileStatus": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "New profile status/bio",
+            "example": "Available"
+          }
+        }
+      },
+      "ProfilePicture": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "WhatsApp number"
+          },
+          "picture": {
+            "type": "string",
+            "description": "Base64 image or URL"
+          }
+        }
+      },
+      "PrivacySettings": {
+        "type": "object",
+        "required": ["readreceipts", "profile", "status", "online", "last", "groupadd"],
+        "properties": {
+          "readreceipts": {
+            "type": "string",
+            "enum": ["all", "none"]
+          },
+          "profile": {
+            "type": "string",
+            "enum": ["all", "contacts", "contact_blacklist", "none"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["all", "contacts", "contact_blacklist", "none"]
+          },
+          "online": {
+            "type": "string",
+            "enum": ["all", "match_last_seen"]
+          },
+          "last": {
+            "type": "string",
+            "enum": ["all", "contacts", "contact_blacklist", "none"]
+          },
+          "groupadd": {
+            "type": "string",
+            "enum": ["all", "contacts", "contact_blacklist", "none"]
+          }
+        }
+      },
+      "QueryFilter": {
+        "type": "object",
+        "properties": {
+          "where": {
+            "type": "object",
+            "description": "Filter conditions"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of results",
+            "default": 50
+          }
+        }
       }
     }
   },
@@ -1287,6 +1532,857 @@
                 "schema": {
                   "$ref": "#/components/schemas/SuccessResponse"
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/whatsappNumbers/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Check WhatsApp Numbers",
+        "description": "Verify if phone numbers are registered on WhatsApp",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Name of the instance"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/WhatsAppNumberCheck"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Number verification results",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/markMessageAsRead/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Mark Messages as Read",
+        "description": "Mark one or more messages as read",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/ReadMessage"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Messages marked as read",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/archiveChat/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Archive/Unarchive Chat",
+        "description": "Archive or unarchive a chat conversation",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/ArchiveChat"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Chat archived/unarchived successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/markChatUnread/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Mark Chat as Unread",
+        "description": "Mark a chat conversation as unread",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/MarkChatUnread"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Chat marked as unread",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/deleteMessageForEveryone/{instanceName}": {
+      "delete": {
+        "tags": ["Chat"],
+        "summary": "Delete Message for Everyone",
+        "description": "Delete a message for all participants in the chat",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/DeleteMessage"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/fetchProfilePictureUrl/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Fetch Profile Picture URL",
+        "description": "Get profile picture URL for a WhatsApp number",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["number"],
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile picture URL retrieved",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/getBase64FromMediaMessage/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Get Base64 from Media Message",
+        "description": "Convert media message to base64 format",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                  "message": {
+                    "type": "object",
+                    "description": "WhatsApp message object"
+                  },
+                  "convertToMp4": {
+                    "type": "boolean",
+                    "description": "Convert video to MP4 format"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Base64 media retrieved",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/updateMessage/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Update Message",
+        "description": "Edit a previously sent message",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/UpdateMessage"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/sendPresence/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Send Presence to Chat",
+        "description": "Send typing, recording, or other presence indicators to a specific chat",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/SendPresence"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Presence sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/updateBlockStatus/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Block/Unblock User",
+        "description": "Block or unblock a WhatsApp user",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/BlockUser"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Block status updated",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/findContacts/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Find Contacts",
+        "description": "Search and filter contacts from instance database",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/QueryFilter"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contacts retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {"type": "string"},
+                      "pushName": {"type": "string"},
+                      "remoteJid": {"type": "string"},
+                      "profilePicUrl": {"type": "string"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/findMessages/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Find Messages",
+        "description": "Search and filter messages from instance database",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/QueryFilter"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Messages retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/findStatusMessage/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Find Message Status",
+        "description": "Get message delivery and read status updates",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/QueryFilter"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message status retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "enum": ["ERROR", "PENDING", "SERVER_ACK", "DELIVERY_ACK", "READ", "PLAYED"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/findChats/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Find Chats",
+        "description": "Search and filter chat conversations",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/QueryFilter"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chats retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/findChatByRemoteJid/{instanceName}": {
+      "get": {
+        "tags": ["Chat"],
+        "summary": "Find Chat by Remote JID",
+        "description": "Get specific chat by WhatsApp JID",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          },
+          {
+            "name": "remoteJid",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "WhatsApp JID (e.g., 5511999999999@s.whatsapp.net)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chat found",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          },
+          "400": {
+            "description": "remoteJid query parameter is required"
+          }
+        }
+      }
+    },
+    "/chat/fetchBusinessProfile/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Fetch Business Profile",
+        "description": "Get WhatsApp Business profile information",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["number"],
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Business profile retrieved",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/fetchProfile/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Fetch User Profile",
+        "description": "Get user profile information",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["number"],
+                "properties": {
+                  "number": {
+                    "type": "string",
+                    "example": "5511999999999"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile retrieved",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/updateProfileName/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Update Profile Name",
+        "description": "Update your WhatsApp profile name",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/ProfileName"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile name updated",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/updateProfileStatus/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Update Profile Status",
+        "description": "Update your WhatsApp profile status/bio",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/ProfileStatus"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile status updated",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/updateProfilePicture/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Update Profile Picture",
+        "description": "Update your WhatsApp profile picture",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/ProfilePicture"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile picture updated",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/removeProfilePicture/{instanceName}": {
+      "delete": {
+        "tags": ["Chat"],
+        "summary": "Remove Profile Picture",
+        "description": "Remove your WhatsApp profile picture",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile picture removed",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/fetchPrivacySettings/{instanceName}": {
+      "get": {
+        "tags": ["Chat"],
+        "summary": "Fetch Privacy Settings",
+        "description": "Get current WhatsApp privacy settings",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Privacy settings retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "readreceipts": {"type": "string"},
+                    "profile": {"type": "string"},
+                    "status": {"type": "string"},
+                    "online": {"type": "string"},
+                    "last": {"type": "string"},
+                    "groupadd": {"type": "string"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/updatePrivacySettings/{instanceName}": {
+      "post": {
+        "tags": ["Chat"],
+        "summary": "Update Privacy Settings",
+        "description": "Update WhatsApp privacy settings",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "instanceName",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/PrivacySettings"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Privacy settings updated",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SuccessResponse"}
               }
             }
           }
