@@ -4658,7 +4658,7 @@ export class BaileysStartupService extends ChannelStartupService {
       pushName:
         message.pushName ||
         (message.key.fromMe
-          ? 'Você'
+          ? 'Tú'
           : message?.participant || (message.key?.participant ? message.key.participant.split('@')[0] : null)),
       status: status[message.status],
       message: this.deserializeMessageBuffers({ ...message.message }),
@@ -5096,7 +5096,7 @@ export class BaileysStartupService extends ChannelStartupService {
 
       if (!message.pushName) {
         if (messageKey.fromMe) {
-          message.pushName = 'Você';
+          message.pushName = 'Tú';
         } else if (message.contextInfo) {
           const contextInfo = message.contextInfo as { participant?: string };
           if (contextInfo.participant) {
