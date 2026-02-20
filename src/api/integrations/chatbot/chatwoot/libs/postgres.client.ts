@@ -13,7 +13,7 @@ class Postgres {
     if (this.connected) {
       return this.pool;
     } else {
-      const ca = configService.get<Chatwoot>('CHATWOOT').IMPORT.DATABASE.CONNECTION.CA_CERT;
+      const ca = configService.get<Chatwoot>('CHATWOOT').IMPORT.DATABASE.CONNECTION.CA_CERT?.replace(/\\n/g, '\n');
       this.pool = new Pool({
         connectionString,
         ssl: {
