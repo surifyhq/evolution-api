@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc --noEmit && tsup",
     "start": "node dist/main",
+    "start:prod": "node dist/main",
     "dev": "dotenv -e .env -- tsx watch ./src/main.ts",
     "test": "tsx watch ./test/all.test.ts",
     "lint": "eslint --fix --ext .ts src",
