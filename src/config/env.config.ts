@@ -51,7 +51,6 @@ export type SaveData = {
 export type DBConnection = {
   URI: string;
   CLIENT_NAME: string;
-  CA_CERT: string;
 };
 export type Database = {
   CONNECTION: DBConnection;
@@ -325,7 +324,6 @@ export type Chatwoot = {
     DATABASE: {
       CONNECTION: {
         URI: string;
-        CA_CERT: string;
       };
     };
     PLACEHOLDER_MEDIA_MESSAGE: boolean;
@@ -486,7 +484,6 @@ export class ConfigService {
         CONNECTION: {
           URI: process.env.DATABASE_CONNECTION_URI || '',
           CLIENT_NAME: process.env.DATABASE_CONNECTION_CLIENT_NAME || 'evolution',
-          CA_CERT: process.env.DATABASE_CA_CERT || '',
         },
         PROVIDER: process.env.DATABASE_PROVIDER || 'postgresql',
         SAVE_DATA: {
@@ -821,7 +818,6 @@ export class ConfigService {
           DATABASE: {
             CONNECTION: {
               URI: process.env.CHATWOOT_IMPORT_DATABASE_CONNECTION_URI || '',
-              CA_CERT: process.env.CHATWOOT_IMPORT_DATABASE_CA_CERT || '',
             },
           },
           PLACEHOLDER_MEDIA_MESSAGE: process.env?.CHATWOOT_IMPORT_PLACEHOLDER_MEDIA_MESSAGE === 'true',
