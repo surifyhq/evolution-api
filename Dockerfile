@@ -57,6 +57,7 @@ ENV DOCKER_ENV=true
 
 EXPOSE 8080
 
-RUN ./Docker/scripts/deploy_database.sh
+RUN npm run db:deploy
+RUN npm run db:generate
 
 ENTRYPOINT ["/bin/bash", "-c", "npm run start:prod" ]
